@@ -1,3 +1,8 @@
+#data-range-input{
+  width:0px;
+  display: inline-block;
+  height:1px;
+}
 .selectionInProgress{
   color: #3333dd !important;
 }

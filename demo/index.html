@@ -13,7 +13,7 @@
 
 
 <div class = "outer" >
-    <div class='date-range-picker-container' id="data-range-input">
+    <div class='date-range-picker-container' ><div id="data-range-input"></div>
         <input class="date-range-picker-startDate" ng-model="dateFromBackend.start" readonly />
         <div class="date-range-picker-to">-</div>
         <input class="date-range-picker-endDate" ng-model="dateFromBackend.end" readonly />
@@ -50,8 +50,8 @@
       //----------------------------- Variables
 
       $scope.dateFromBackend = {};
-      $scope.dateFromBackend.start = '1-05-2017';
-      $scope.dateFromBackend.end = '14-05-2017';
+      $scope.dateFromBackend.start = '05-01-2017';
+      $scope.dateFromBackend.end = '05-27-2017';
       $scope.cache = {};
       $scope.comingFromStartDateWithoutSelection = 0;
       $scope.isJustFirstDateSelected = 0;
@@ -60,13 +60,13 @@
 
       $('#data-range-input').dateRangePicker({
       autoClose: true,
-      format: 'DD-MM-YYYY',
+      format: 'MM-DD-YYYY',
       separator : ' to ',
       stickyMonths : true,
       minDays : 2,
       //maxDays : 100,
       //endDate : moment().add(3, 'months').format('YYYY-MM-DD'),
-      startDate: moment().format('DD-MM-YYYY'),
+      startDate: moment().format('MM-DD-YYYY'),
     })
     .bind('datepicker-first-date-selected', function(event, obj)
     {
@@ -74,7 +74,7 @@
       $('.date-range-picker-endDate').addClass('selectionInProgress');
 
       $scope.$apply(function() {
-          $scope.updateDates(moment(obj.date1).format('DD-MM-YYYY'), null);
+          $scope.updateDates(moment(obj.date1).format('MM-DD-YYYY'), null);
           $scope.cache.startDay = $(obj.day);
           $scope.isJustFirstDateSelected = 1;
         });
@@ -89,22 +89,22 @@
                         $scope.cache.endDay = null;
                       });
 
-                      let a = 0;
+
                     $('.day').each(function(index, element){ // loop through all days to set correct classes
 
                             // find start Date element and assign class  (dividing by 100000 is to remove the time parents)
-                            if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'DD-MM-YYYY').toDate().getTime()/100000) ){
+                            if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ){
                               $scope.cache.startDay = $(element);
                             }
 
                             // find end Date element and assign class
-                            if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.end, 'DD-MM-YYYY').toDate().getTime()/100000) ){
+                            if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.end, 'MM-DD-YYYY').toDate().getTime()/100000) ){
                               $scope.cache.endDay = $(element);
                             }
 
                             // find the days between startday and endday to apply selection class
-                            if( ( Math.floor($(element).attr('time')/100000) > Math.floor(moment($scope.dateFromBackend.start, 'DD-MM-YYYY').toDate().getTime()/100000) ) &&
-                                ( Math.floor($(element).attr('time')/100000) < Math.floor(moment($scope.dateFromBackend.end, 'DD-MM-YYYY').toDate().getTime()/100000) ) ) {
+                            if( ( Math.floor($(element).attr('time')/100000) > Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ) &&
+                                ( Math.floor($(element).attr('time')/100000) < Math.floor(moment($scope.dateFromBackend.end, 'MM-DD-YYYY').toDate().getTime()/100000) ) ) {
                                   $scope.cache.checkedDays.push($(element));
                                 }
                       });
@@ -133,7 +133,7 @@
     .bind('datepicker-change',function(event, obj)
     {
       $scope.$apply(function() {
-          $scope.updateDates(moment(obj.date1).format('DD-MM-YYYY'), moment(obj.date2).format('DD-MM-YYYY'));
+          $scope.updateDates(moment(obj.date1).format('MM-DD-YYYY'), moment(obj.date2).format('MM-DD-YYYY'));
           $scope.isJustFirstDateSelected = 0;
         });
         $('#data-range-input').data('dateRangePicker').close();
@@ -153,8 +153,9 @@
           $scope.cache.startDay = null;
           $scope.cache.endDay = null;
           $scope.cache.checkedDays = [];
-          $scope.isJustFirstDateSelected = 0;
         });
+        $('#data-range-input').data('dateRangePicker').setEnd($scope.dateFromBackend.end, true);
+        //$scope.updateDates($scope.dateFromBackend.start, $scope.dateFromBackend.start);
 
     })
     .bind('datepicker-open',function()
@@ -177,11 +178,11 @@
     $scope.areDatesBeforeToday = function(startDate, endDate){
         let isStartDateBeforeToday = 0;
         let isEndDateBeforeToday = 0;
-        if(moment().diff(moment(startDate, 'DD-MM-YYYY'), 'days') >= 1){
+        if(moment().diff(moment(startDate, 'MM-DD-YYYY'), 'days') >= 1){
           //startDate is before today
           isStartDateBeforeToday = 1;
         }
-        if(moment().diff(moment(endDate, 'DD-MM-YYYY'), 'days') >= 1){
+        if(moment().diff(moment(endDate, 'MM-DD-YYYY'), 'days') >= 1){
           //endDate is before today
           isEndDateBeforeToday = 1;
         }
@@ -212,32 +213,32 @@
 //-################################################################################################################################################################################
 //-################################################################################################################################################################################
     $('.date-range-picker-startDate').click(function(evt){
+
           $('#data-range-input').data('dateRangePicker').setEnd($scope.dateFromBackend.end, true);
 
 //-==============================================================================================================================================================================
           if($scope.areDatesBeforeToday($scope.dateFromBackend.start, $scope.dateFromBackend.end) == 'bothDatesAreBeforeToday'){
-                    console.log('both before');
-
 
                     $('#data-range-input').click(); // open modal
-
                     $('.day').removeClass('valid').addClass("invalid"); // make all days invalid
+
+
 
                     $('.day').each(function(index, element){ // loop through all days to set correct classes
 
                             // find start Date element and assign class  (dividing by 100000 is to remove the time parents)
-                            if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'DD-MM-YYYY').toDate().getTime()/100000) ){
+                            if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ){
                               $(element).addClass('first-date-selected');
                             }
 
                             // find end Date element and assign class
-                            if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.end, 'DD-MM-YYYY').toDate().getTime()/100000) ){
+                            if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.end, 'MM-DD-YYYY').toDate().getTime()/100000) ){
                               $(element).addClass('last-date-selected');
                             }
 
                             // find the days between startday and endday to apply selection class
-                            if( ( Math.floor($(element).attr('time')/100000) > Math.floor(moment($scope.dateFromBackend.start, 'DD-MM-YYYY').toDate().getTime()/100000) ) &&
-                                ( Math.floor($(element).attr('time')/100000) < Math.floor(moment($scope.dateFromBackend.end, 'DD-MM-YYYY').toDate().getTime()/100000) ) ) {
+                            if( ( Math.floor($(element).attr('time')/100000) > Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ) &&
+                                ( Math.floor($(element).attr('time')/100000) < Math.floor(moment($scope.dateFromBackend.end, 'MM-DD-YYYY').toDate().getTime()/100000) ) ) {
 
                                   $(element).addClass('checked');
                                 }
@@ -246,26 +247,25 @@
 //-==============================================================================================================================================================================
 
           else if($scope.areDatesBeforeToday($scope.dateFromBackend.start, $scope.dateFromBackend.end) == 'startDateBeforeToday'){
-                  console.log('start date is before today');
 
                   $('#data-range-input').click();
 
                   $('.day').each(function(index, element){ // loop through all days to set correct classes
 
                           // find start Date element and assign class  (dividing by 100000 is to remove the time parents)
-                          if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'DD-MM-YYYY').toDate().getTime()/100000) ){
+                          if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ){
                             $scope.cache.startDay = $(element);
                             $(element).removeClass('invalid').addClass('valid first-date-selected');
                           }
 
                           // find end Date element and assign class
-                          if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.end, 'DD-MM-YYYY').toDate().getTime()/100000) ){
+                          if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.end, 'MM-DD-YYYY').toDate().getTime()/100000) ){
                             $(element).addClass('last-date-selected');
                           }
 
                           // find the days between startday and endday to apply selection class
-                          if( ( Math.floor($(element).attr('time')/100000) > Math.floor(moment($scope.dateFromBackend.start, 'DD-MM-YYYY').toDate().getTime()/100000) ) &&
-                              ( Math.floor($(element).attr('time')/100000) < Math.floor(moment($scope.dateFromBackend.end, 'DD-MM-YYYY').toDate().getTime()/100000) ) ) {
+                          if( ( Math.floor($(element).attr('time')/100000) > Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ) &&
+                              ( Math.floor($(element).attr('time')/100000) < Math.floor(moment($scope.dateFromBackend.end, 'MM-DD-YYYY').toDate().getTime()/100000) ) ) {
 
                                 $(element).addClass('checked');
                               }
@@ -277,7 +277,7 @@
           }
 //-==============================================================================================================================================================================
           else if($scope.areDatesBeforeToday($scope.dateFromBackend.start, $scope.dateFromBackend.end) == 'bothDatesAreAfterToday'){
-            console.log('both after');
+
             $scope.comingFromStartDateWithoutSelection = 1;
             $('.date-range-picker-startDate').addClass('selectionInProgress');
             $scope.cache.checkedDays = $('.day.checked');
@@ -305,18 +305,18 @@
           $('.day').each(function(index, element){ // loop through all days to set correct classes
 
                   // find start Date element and assign class  (dividing by 100000 is to remove the time parents)
-                  if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'DD-MM-YYYY').toDate().getTime()/100000) ){
+                  if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ){
                     $(element).addClass('first-date-selected');
                   }
 
                   // find end Date element and assign class
-                  if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.end, 'DD-MM-YYYY').toDate().getTime()/100000) ){
+                  if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.end, 'MM-DD-YYYY').toDate().getTime()/100000) ){
                     $(element).addClass('last-date-selected');
                   }
 
                   // find the days between startday and endday to apply selection class
-                  if( ( Math.floor($(element).attr('time')/100000) > Math.floor(moment($scope.dateFromBackend.start, 'DD-MM-YYYY').toDate().getTime()/100000) ) &&
-                      ( Math.floor($(element).attr('time')/100000) < Math.floor(moment($scope.dateFromBackend.end, 'DD-MM-YYYY').toDate().getTime()/100000) ) ) {
+                  if( ( Math.floor($(element).attr('time')/100000) > Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ) &&
+                      ( Math.floor($(element).attr('time')/100000) < Math.floor(moment($scope.dateFromBackend.end, 'MM-DD-YYYY').toDate().getTime()/100000) ) ) {
 
                         $(element).addClass('checked');
                       }
@@ -331,19 +331,19 @@
           $('.day').each(function(index, element){ // loop through all days to set correct classes
 
                   // find start Date element and assign class  (dividing by 100000 is to remove the time parents)
-                  if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'DD-MM-YYYY').toDate().getTime()/100000) ){
+                  if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ){
                     $scope.cache.startDay = $(element);
                     $(element).removeClass('invalid').addClass('valid first-date-selected');
                   }
 
                   // find end Date element and assign class
-                  if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.end, 'DD-MM-YYYY').toDate().getTime()/100000) ){
+                  if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.end, 'MM-DD-YYYY').toDate().getTime()/100000) ){
                     $(element).addClass('last-date-selected');
                   }
 
                   // find the days between startday and endday to apply selection class
-                  if( ( Math.floor($(element).attr('time')/100000) > Math.floor(moment($scope.dateFromBackend.start, 'DD-MM-YYYY').toDate().getTime()/100000) ) &&
-                      ( Math.floor($(element).attr('time')/100000) < Math.floor(moment($scope.dateFromBackend.end, 'DD-MM-YYYY').toDate().getTime()/100000) ) ) {
+                  if( ( Math.floor($(element).attr('time')/100000) > Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ) &&
+                      ( Math.floor($(element).attr('time')/100000) < Math.floor(moment($scope.dateFromBackend.end, 'MM-DD-YYYY').toDate().getTime()/100000) ) ) {
 
                         $(element).addClass('checked');
                       }
@@ -358,7 +358,7 @@
 
               $('.day').each(function(index, element){
                       // find start Date element and assign class  (dividing by 100000 is to remove the time part)
-                      if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'DD-MM-YYYY').toDate().getTime()/100000) ){
+                      if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ){
                         $scope.cache.startDay = $(element);
                       }
               });
