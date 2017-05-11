@@ -1455,7 +1455,6 @@
 
         function dayClicked(day) {
 
-
             if (day.hasClass('invalid')) return;
             var time = day.attr('time');
             day.addClass('checked');
@@ -1503,8 +1502,23 @@
                 }
             }
 
+            // //In case the start is after the end, swap the timestamps
+            // if (!opt.singleDate && opt.start && opt.end && opt.start > opt.end) {
+            //     var tmp = opt.end;
+            //     opt.end = handleEnd(opt.start);
+            //     opt.start = handleStart(tmp);
+            //     if (opt.time.enabled && opt.swapTime) {
+            //         swapTime();
+            //     }
+            // }
+
             //In case the start is after the end, swap the timestamps
             if (!opt.singleDate && opt.start && opt.end && opt.start > opt.end) {
+
+                $(self).trigger('datepicker-end-date-is-been-selected-after-start-date', {
+                    'date1': new Date(parseInt(opt.end))
+                });// alanjsph@live.com
+
                 var tmp = opt.end;
                 opt.end = handleEnd(opt.start);
                 opt.start = handleStart(tmp);

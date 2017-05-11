@@ -50,8 +50,8 @@
       //----------------------------- Variables
 
       $scope.dateFromBackend = {};
-      $scope.dateFromBackend.start = '05-07-2017';
-      $scope.dateFromBackend.end = '05-15-2017';
+      $scope.dateFromBackend.start = '05-15-2017';
+      $scope.dateFromBackend.end = '05-25-2017';
       $scope.cache = {};
       $scope.comingFromStartDateWithoutSelection = 0;
       $scope.isJustFirstDateSelected = 0;
@@ -105,6 +105,11 @@
                     $(element).addClass('checked');
                   }
         });
+
+    })
+    .bind('datepicker-end-date-is-been-selected-after-start-date',function(event, obj)
+    {
+        console.log('st before end');
 
     })
 
