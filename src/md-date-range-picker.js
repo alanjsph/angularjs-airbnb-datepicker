@@ -1078,10 +1078,17 @@
             });
 
             box.find('.next').click(function() {
-                if (!opt.stickyMonths)
+
+                if (!opt.stickyMonths){
                     gotoNextMonth(this);
-                else
+                  }
+                else{
                     gotoNextMonth_stickily(this);
+                  }
+                $(self).trigger('datepicker-display-month-changed', {
+
+                });
+
             });
 
             function gotoNextMonth(self) {
@@ -1105,10 +1112,15 @@
 
 
             box.find('.prev').click(function() {
-                if (!opt.stickyMonths)
+                if (!opt.stickyMonths){
                     gotoPrevMonth(this);
-                else
+                  }
+                else{
                     gotoPrevMonth_stickily(this);
+                  }
+                $(self).trigger('datepicker-display-month-changed', {
+
+                });
             });
 
             function gotoPrevMonth(self) {
@@ -1443,8 +1455,6 @@
 
         function dayClicked(day) {
 
-            // to dynamically set the max days to 3 months
-            opt.maxDays = moment( parseInt(day.attr('time')) ).add(3, 'months').diff( moment( parseInt(day.attr('time')) ), 'days' ) + 1 ;
 
             if (day.hasClass('invalid')) return;
             var time = day.attr('time');
@@ -1470,6 +1480,10 @@
                 opt.start = moment(parseInt(time)).startOf('month').valueOf();
                 opt.end = moment(parseInt(time)).endOf('month').valueOf();
             } else if ((opt.start && opt.end) || (!opt.start && !opt.end)) {
+
+                // to dynamically set the max days to 3 months
+                opt.maxDays = moment( parseInt(day.attr('time')) ).add(3, 'months').diff( moment( parseInt(day.attr('time')) ), 'days' ) ;
+
                 opt.start = handleStart(time);
                 opt.end = false;
             } else if (opt.start) {
@@ -1776,6 +1790,11 @@
             } else {
                 box.find('.apply-btn').addClass('disabled');
             }
+
+            box.find('.start-day').hide(); // to hide the info at the top of the modal
+            box.find('.end-day').hide();
+            box.find('.separator-day').hide();
+
         }
 
         function countDays(start, end) {

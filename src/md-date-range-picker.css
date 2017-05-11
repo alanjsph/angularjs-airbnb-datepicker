@@ -5,6 +5,7 @@
 }
 .selectionInProgress{
   color: #3333dd !important;
+  text-decoration: underline !important;
 }
 .date-range-picker-container{
     display: inline-block;
@@ -28,9 +29,6 @@
     border : none;
     background: transparent;
     text-align: center;
-}
-.date-range-picker-container > .date-range-picker-startDate:hover{
-    color: #3333dd !important;
 }
 .date-range-picker-container > .date-range-picker-endDate{
     outline: none;

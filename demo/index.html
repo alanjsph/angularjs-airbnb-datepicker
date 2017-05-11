@@ -50,11 +50,12 @@
       //----------------------------- Variables
 
       $scope.dateFromBackend = {};
-      $scope.dateFromBackend.start = '05-01-2017';
-      $scope.dateFromBackend.end = '05-27-2017';
+      $scope.dateFromBackend.start = '05-07-2017';
+      $scope.dateFromBackend.end = '05-15-2017';
       $scope.cache = {};
       $scope.comingFromStartDateWithoutSelection = 0;
       $scope.isJustFirstDateSelected = 0;
+      $scope.isBothDatesBeforeToday = 0;
 
       //---------------------------------------
 
@@ -63,7 +64,7 @@
       format: 'MM-DD-YYYY',
       separator : ' to ',
       stickyMonths : true,
-      minDays : 2,
+      minDays : 1,
       //maxDays : 100,
       //endDate : moment().add(3, 'months').format('YYYY-MM-DD'),
       startDate: moment().format('MM-DD-YYYY'),
@@ -79,6 +80,34 @@
           $scope.isJustFirstDateSelected = 1;
         });
     })
+    .bind('datepicker-display-month-changed',function()
+    {
+        if($scope.isBothDatesBeforeToday){
+            $('.day').removeClass('valid').addClass("invalid"); // make all days invalid
+        }
+
+      $('.day').each(function(index, element){ // loop through all days to set correct classes
+
+              // find start Date element and assign class  (dividing by 100000 is to remove the time parents)
+              if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ){
+                $(element).addClass('first-date-selected');
+              }
+
+              // find end Date element and assign class
+              if( Math.floor($(element).attr('time')/100000) == Math.floor(moment($scope.dateFromBackend.end, 'MM-DD-YYYY').toDate().getTime()/100000) ){
+                $(element).addClass('last-date-selected');
+              }
+
+              // find the days between startday and endday to apply selection class
+              if( ( Math.floor($(element).attr('time')/100000) > Math.floor(moment($scope.dateFromBackend.start, 'MM-DD-YYYY').toDate().getTime()/100000) ) &&
+                  ( Math.floor($(element).attr('time')/100000) < Math.floor(moment($scope.dateFromBackend.end, 'MM-DD-YYYY').toDate().getTime()/100000) ) ) {
+
+                    $(element).addClass('checked');
+                  }
+        });
+
+    })
+
     .bind('datepicker-first-date-selected-after-default-clearings', function(event, obj) // alanjsph@live.com
     {
 
@@ -142,20 +171,33 @@
     .bind('datepicker-close',function()
     {
 
+      // $scope.$apply(function() {
+      //
+      //     $scope.dateFromBackend.start = $('#data-range-input').val().substring(0,10);
+      //     $scope.dateFromBackend.end = $('#data-range-input').val().substring(14,24);
+      //
+      //   });
+
     })
     .bind('datepicker-closed',function()
     {
       $('.date-range-picker-startDate').removeClass('selectionInProgress');
       $('.date-range-picker-endDate').removeClass('selectionInProgress');
 
+      $('#data-range-input').data('dateRangePicker').setEnd($scope.dateFromBackend.end, true);
+
       $scope.$apply(function() {
           $scope.comingFromStartDateWithoutSelection = 0;
           $scope.cache.startDay = null;
           $scope.cache.endDay = null;
           $scope.cache.checkedDays = [];
+
+            if($('#data-range-input').val()){ // if just start date before today, the datepicker setdate for assign. this condition is for that case
+                $scope.dateFromBackend.start = $('#data-range-input').val().substring(0,10);
+                $scope.dateFromBackend.end = $('#data-range-input').val().substring(14,24);
+              }
+
         });
-        $('#data-range-input').data('dateRangePicker').setEnd($scope.dateFromBackend.end, true);
-        //$scope.updateDates($scope.dateFromBackend.start, $scope.dateFromBackend.start);
 
     })
     .bind('datepicker-open',function()
@@ -170,8 +212,8 @@
 
     }); // date picker ending
 
-    $('#data-range-input').data('dateRangePicker').setDateRange($scope.dateFromBackend.start, $scope.dateFromBackend.end);
 
+    $('#data-range-input').data('dateRangePicker').setDateRange($scope.dateFromBackend.start, $scope.dateFromBackend.end);
 
     //--------------------------------------------
 
@@ -219,10 +261,10 @@
 //-==============================================================================================================================================================================
           if($scope.areDatesBeforeToday($scope.dateFromBackend.start, $scope.dateFromBackend.end) == 'bothDatesAreBeforeToday'){
 
+                    $scope.isBothDatesBeforeToday = 1;
+
                     $('#data-range-input').click(); // open modal
                     $('.day').removeClass('valid').addClass("invalid"); // make all days invalid
-
-
 
                     $('.day').each(function(index, element){ // loop through all days to set correct classes
 
@@ -248,7 +290,11 @@
 
           else if($scope.areDatesBeforeToday($scope.dateFromBackend.start, $scope.dateFromBackend.end) == 'startDateBeforeToday'){
 
+                  $scope.isBothDatesBeforeToday = 0;
+
                   $('#data-range-input').click();
+
+                  $('.date-range-picker-endDate').addClass('selectionInProgress');
 
                   $('.day').each(function(index, element){ // loop through all days to set correct classes
 
@@ -272,11 +318,14 @@
                     });
                     if(  !$scope.isJustFirstDateSelected  ){
                         $('#data-range-input').data('dateRangePicker').clickADay($scope.cache.startDay);
+                        $($scope.cache.startDay).removeClass('valid').addClass('invalid');
                       }
 
           }
 //-==============================================================================================================================================================================
           else if($scope.areDatesBeforeToday($scope.dateFromBackend.start, $scope.dateFromBackend.end) == 'bothDatesAreAfterToday'){
+
+            $scope.isBothDatesBeforeToday = 0;
 
             $scope.comingFromStartDateWithoutSelection = 1;
             $('.date-range-picker-startDate').addClass('selectionInProgress');
@@ -299,6 +348,8 @@
               }
 
         if($scope.areDatesBeforeToday($scope.dateFromBackend.start, $scope.dateFromBackend.end) == 'bothDatesAreBeforeToday'){
+
+          $scope.isBothDatesBeforeToday = 1;
 
           $('.day').removeClass('valid').addClass("invalid"); // make all days invalid
 
@@ -328,6 +379,10 @@
 
         else if($scope.areDatesBeforeToday($scope.dateFromBackend.start, $scope.dateFromBackend.end) == 'startDateBeforeToday'){
 
+          $scope.isBothDatesBeforeToday = 0;
+
+          $('.date-range-picker-endDate').addClass('selectionInProgress');
+
           $('.day').each(function(index, element){ // loop through all days to set correct classes
 
                   // find start Date element and assign class  (dividing by 100000 is to remove the time parents)
@@ -350,11 +405,15 @@
             });
             if(  !$scope.isJustFirstDateSelected  ){
                 $('#data-range-input').data('dateRangePicker').clickADay($scope.cache.startDay);
+                $($scope.cache.startDay).removeClass('valid').addClass('invalid');
+
               }
         }
 //-==============================================================================================================================================================================
 
         else if($scope.areDatesBeforeToday($scope.dateFromBackend.start, $scope.dateFromBackend.end) == 'bothDatesAreAfterToday'){
+
+              $scope.isBothDatesBeforeToday = 0;
 
               $('.day').each(function(index, element){
                       // find start Date element and assign class  (dividing by 100000 is to remove the time part)
