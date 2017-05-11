@@ -50,8 +50,8 @@
       //----------------------------- Variables
 
       $scope.dateFromBackend = {};
-      $scope.dateFromBackend.start = '05-15-2017';
-      $scope.dateFromBackend.end = '05-25-2017';
+      $scope.dateFromBackend.start = '05-05-2017';
+      $scope.dateFromBackend.end = '05-10-2017';
       $scope.cache = {};
       $scope.comingFromStartDateWithoutSelection = 0;
       $scope.isJustFirstDateSelected = 0;
@@ -63,7 +63,7 @@
       autoClose: true,
       format: 'MM-DD-YYYY',
       separator : ' to ',
-      stickyMonths : true,
+      stickyMonths : false,
       minDays : 1,
       //maxDays : 100,
       //endDate : moment().add(3, 'months').format('YYYY-MM-DD'),
@@ -334,6 +334,7 @@
 
             $scope.comingFromStartDateWithoutSelection = 1;
             $('.date-range-picker-startDate').addClass('selectionInProgress');
+            $('.date-range-picker-endDate').removeClass('selectionInProgress');
             $scope.cache.checkedDays = $('.day.checked');
             $scope.cache.startDay = $('.day.first-date-selected');
             $scope.cache.endDay = $('.day.last-date-selected');
@@ -419,6 +420,8 @@
         else if($scope.areDatesBeforeToday($scope.dateFromBackend.start, $scope.dateFromBackend.end) == 'bothDatesAreAfterToday'){
 
               $scope.isBothDatesBeforeToday = 0;
+              $('.date-range-picker-endDate').addClass('selectionInProgress');
+              $('.date-range-picker-startDate').removeClass('selectionInProgress');
 
               $('.day').each(function(index, element){
                       // find start Date element and assign class  (dividing by 100000 is to remove the time part)

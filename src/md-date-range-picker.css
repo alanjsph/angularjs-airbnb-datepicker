@@ -36,9 +36,6 @@
     background: transparent;
     text-align: center;
 }
-.date-range-picker-container > .date-range-picker-endDate:hover{
-    color: #3333dd !important;
-}
 .date-range-picker-container > .date-range-picker-to{
     text-align: center;
     width: 5px;
