@@ -1808,6 +1808,10 @@
             return Math.abs(daysFrom1970(start) - daysFrom1970(end)) + 1;
         }
 
+
+            // console.log(date2);
+            // console.log(opt.startDate);
+
         function setDateRange(date1, date2, silent) {
             if (date1.getTime() > date2.getTime()) {
                 var tmp = date2;
@@ -1815,15 +1819,17 @@
                 date1 = tmp;
                 tmp = null;
             }
-            var valid = true;
-            if (opt.startDate && compare_day(date1, opt.startDate) < 0) valid = false;
-            if (opt.endDate && compare_day(date2, opt.endDate) > 0) valid = false;
-            if (!valid) {
-                showMonth(opt.startDate, 'month1');
-                showMonth(nextMonth(opt.startDate), 'month2');
-                showGap();
-                return;
-            }
+            // removed to show months correctly even if the startDate or end date is not available  alanjsph@live.com
+
+            // var valid = true;
+            // if (opt.startDate && compare_day(date1, opt.startDate) < 0) valid = false;
+            // if (opt.endDate && compare_day(date2, opt.endDate) > 0) valid = false;
+            // if (!valid) {
+            //     showMonth(opt.startDate, 'month1');
+            //     showMonth(nextMonth(opt.startDate), 'month2');
+            //     showGap();
+            //     return;
+            // }
 
             opt.start = date1.getTime();
             opt.end = date2.getTime();
@@ -2247,7 +2253,8 @@
         function isMonthOutOfBounds(month) {
             month = moment(month);
             if (opt.startDate && month.endOf('month').isBefore(opt.startDate)) {
-                return true;
+                //return true; // alanjsph@live.com      to enable going to a month that is out of bounds
+                return false;
             }
             if (opt.endDate && month.startOf('month').isAfter(opt.endDate)) {
                 return true;

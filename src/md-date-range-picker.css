@@ -4,9 +4,9 @@
   height:1px;
 }
 .invalid.checked{
-  color: #444 !important;
+  color: #666 !important;
 }
-.day.valid:hover{
+.day.valid:not(.first-date-selected):not(.last-date-selected):hover{
   background: #cdecfa !important;
 }
 .selectionInProgress{
