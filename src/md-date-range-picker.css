@@ -3,6 +3,12 @@
   display: inline-block;
   height:1px;
 }
+.invalid.checked{
+  color: #444 !important;
+}
+.day.valid:hover{
+  background: #cdecfa !important;
+}
 .selectionInProgress{
   color: #3333dd !important;
   text-decoration: underline !important;

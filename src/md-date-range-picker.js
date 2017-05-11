@@ -1051,7 +1051,10 @@
             else
                 defaultTopText = translate('default-default');
 
-            box.find('.default-top').html(defaultTopText.replace(/\%d/, opt.minDays).replace(/\%d/, opt.maxDays));
+                //to clear out the top message of the modal
+            //box.find('.default-top').html(defaultTopText.replace(/\%d/, opt.minDays).replace(/\%d/, opt.maxDays));
+            box.find('.default-top').html('');
+
             if (opt.singleMonth) {
                 box.addClass('single-month');
             } else {
@@ -1502,16 +1505,6 @@
                 }
             }
 
-            // //In case the start is after the end, swap the timestamps
-            // if (!opt.singleDate && opt.start && opt.end && opt.start > opt.end) {
-            //     var tmp = opt.end;
-            //     opt.end = handleEnd(opt.start);
-            //     opt.start = handleStart(tmp);
-            //     if (opt.time.enabled && opt.swapTime) {
-            //         swapTime();
-            //     }
-            // }
-
             //In case the start is after the end, swap the timestamps
             if (!opt.singleDate && opt.start && opt.end && opt.start > opt.end) {
 
@@ -1656,7 +1649,7 @@
                                 (opt.start > time && hoverTime <= time)
                             )
                         ) {
-                            $(this).addClass('hovering');
+                            //$(this).addClass('hovering');
                         } else {
                             $(this).removeClass('hovering');
                         }
