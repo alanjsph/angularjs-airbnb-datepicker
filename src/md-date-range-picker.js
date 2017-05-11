@@ -1649,7 +1649,7 @@
                                 (opt.start > time && hoverTime <= time)
                             )
                         ) {
-                            //$(this).addClass('hovering');
+                            $(this).addClass('hovering');
                         } else {
                             $(this).removeClass('hovering');
                         }

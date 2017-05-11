@@ -199,7 +199,7 @@
     cursor: pointer;
 }
 
-.date-picker-wrapper .month-wrapper table .day.toMonth.hovering {
+.date-picker-wrapper .month-wrapper table .day.toMonth.hovering:not(.checked) { /*alanjsph@live.com */
     background-color: #cdecfa;
 }
 
