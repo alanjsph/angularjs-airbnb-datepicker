@@ -50,8 +50,8 @@
       //----------------------------- Variables
 
       $scope.dateFromBackend = {};
-      $scope.dateFromBackend.start = '06-13-2017';
-      $scope.dateFromBackend.end = '08-15-2017';
+      $scope.dateFromBackend.start = '';
+      $scope.dateFromBackend.end = '';
       $scope.cache = {};
       $scope.comingFromStartDateWithoutSelection = 0;
       $scope.isJustFirstDateSelected = 0;
@@ -218,8 +218,15 @@
 
     }); // date picker ending
 
-
-    $('#data-range-input').data('dateRangePicker').setDateRange($scope.dateFromBackend.start, $scope.dateFromBackend.end);
+    if($scope.dateFromBackend.start && $scope.dateFromBackend.end){
+        $('#data-range-input').data('dateRangePicker').setDateRange($scope.dateFromBackend.start, $scope.dateFromBackend.end);
+    }
+    else{
+      $('#data-range-input').data('dateRangePicker').setDateRange(moment().format('MM-DD-YYYY'), moment().format('MM-DD-YYYY') );
+      //$('#data-range-input').data('dateRangePicker').clear();
+       $scope.dateFromBackend.start = 'Start' ;
+       $scope.dateFromBackend.end = 'End' ;
+    }
 
     //--------------------------------------------
 
