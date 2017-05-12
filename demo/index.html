@@ -50,8 +50,8 @@
     //----------------------------- Variables
 
     $scope.dateFromBackend = {};
-    $scope.dateFromBackend.start = '05-22-2017';
-    $scope.dateFromBackend.end = '07-25-2017';
+    $scope.dateFromBackend.start = '';
+    $scope.dateFromBackend.end = '';
     $scope.cache = {};
     $scope.comingFromStartDateWithoutSelection = 0;
     $scope.isJustFirstDateSelected = 0;
@@ -161,7 +161,10 @@
     }
     else{
       $('#data-range-input').data('dateRangePicker').setDateRange(moment().format('MM-DD-YYYY'), moment().format('MM-DD-YYYY') );
-      //$('#data-range-input').data('dateRangePicker').clear();
+      $('.day').removeClass('first-date-selected');
+      $('.day').removeClass('first-date-selected');
+      $('.day').removeClass('checked');
+
       $scope.dateFromBackend.start = 'Start' ;
       $scope.dateFromBackend.end = 'End' ;
     }
@@ -226,6 +229,7 @@
           $(element).addClass('checked');
           $scope.cache.checkedDays.push($(element));
         }
+
       });
     }
 
@@ -278,6 +282,18 @@
         $scope.cache.endDay = $('.day.last-date-selected');
         $('#data-range-input').click();
       }
+
+      if( ($scope.dateFromBackend.start == 'Start') ){
+          console.log('hit');
+            $('.day').removeClass('first-date-selected');
+            $('.day').removeClass('last-date-selected');
+            $('.day').removeClass('checked');
+          }
+
+      if( ($scope.dateFromBackend.end != 'End') ){
+          $('.hovering').removeClass('hovering');
+      }
+
 
     });
     //-################################################################################################################################################################################
@@ -335,7 +351,16 @@
         if($scope.dateFromBackend.start != 'Start'){
           $('#data-range-input').data('dateRangePicker').clickADay($scope.cache.startDay);
         }
-
+        if( ($scope.dateFromBackend.start == 'Start') ){
+            console.log('hit');
+              $('.day').removeClass('first-date-selected');
+              $('.day').removeClass('last-date-selected');
+              $('.day').removeClass('checked');
+            }
+        if( ($scope.dateFromBackend.end != 'End') ){
+            console.log('not end');
+            $('.day').addClass('remove-hovering');
+        }
 
 
       }

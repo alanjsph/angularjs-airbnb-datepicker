@@ -3,6 +3,9 @@
   display: inline-block;
   height:1px;
 }
+.remove-hovering:not(.first-date-selected):not(.last-date-selected):not(.checked){
+  background: rgba(0,0,0,0) !important;
+}
 .invalid.checked{
   color: #666 !important;
 }
